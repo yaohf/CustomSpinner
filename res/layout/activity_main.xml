@@ -6,7 +6,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity"
+    tools:ignore="UnusedNamespace" >
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,8 +15,10 @@
         android:text="@string/hello_world" />
 	<com.custom.CustomSinnper 
 	    android:id="@+id/custom_sinnper"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content">	    
+	    android:layout_width="200dip"
+	    android:layout_height="wrap_content"
+	    android:text="--选择下拉类型--"
+	    >	   
 	</com.custom.CustomSinnper>
     
 </RelativeLayout>

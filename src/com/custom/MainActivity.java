@@ -28,7 +28,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		spinner = (CustomSinnper) findViewById(R.id.custom_sinnper);
-		spinner.setText("--选择下拉类型--");
 //		Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 //		
 //		spinner.setDrawable(new BitmapDrawable(bitmap));

@@ -1,7 +1,10 @@
 package com.custom;
 
+import java.awt.font.TextAttribute;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
@@ -10,6 +13,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
@@ -21,10 +27,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
-public class CustomSinnper extends LinearLayout {
+public class CustomSinnper extends Button {
 
 	protected PopupWindow popup = null;
-	private Button topButton;
+	private CustomSinnper topButton;
 
 	/**
 	 * 自定义listView 实现圆角功能
@@ -37,36 +43,19 @@ public class CustomSinnper extends LinearLayout {
 
 	private Context mContext;
 	
+	private int width = 200;
+	
+	private int height = 100;
+	
+	public void setWidth(int width){
+		this.width = width;
+	}
+	public void setheight(int height){
+		this.height = height;
+	}
+	
+	
 
-	/**
-	 * set CustomSpinner text
-	 * 
-	 * @param text
-	 */
-	public final void setText(CharSequence text) {
-		topButton.setText(text);
-	}
-
-	/**
-	 * set CustomSpinner background style
-	 * 
-	 * @param drawable
-	 */
-	public void setDrawable(Drawable drawable) {
-		topButton.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
-	}
-    /**
-     * Set the layout parameters associated with this view. These supply
-     * parameters to the <i>parent</i> of this view specifying how it should be
-     * arranged. There are many subclasses of ViewGroup.LayoutParams, and these
-     * correspond to the different subclasses of ViewGroup that are responsible
-     * for arranging their children.
-     *
-     * @param params The layout parameters for this view, cannot be null
-     */
-	public void setLayoutParams(LayoutParams params){
-		topButton.setLayoutParams(params);
-	}
 
 	/**
 	 * Button topButton to addView
@@ -74,12 +63,38 @@ public class CustomSinnper extends LinearLayout {
 	 * @param context
 	 * @param attrs
 	 */
-	@SuppressLint("NewApi")
+	@SuppressLint({ "NewApi", "Recycle" })
 	public CustomSinnper(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.mContext = context;
-		topButton = new Button(mContext);
-		arrow = new ArrowView(context, null, topButton);
+		topButton = this;
+		initView(mContext);
+		
+//		TypedArray attributes = mContext.obtainStyledAttributes(attrs, R.styleable.spinner);
+//		final CharSequence text = attributes.getString(R.styleable.spinner_text);
+//		Log.i("text", text.toString());
+//		if(text != null){
+//			topButton.setText(text);
+//		}
+//
+//		
+//		final int color = attributes.getColor(R.styleable.spinner_textColor, Color.BLACK);
+//		topButton.setTextColor(color);
+//		
+//		final int textSize = attributes.getDimensionPixelSize(R.styleable.spinner_textSize, 0);
+//		if(textSize > 0){
+//			topButton.setTextScaleX(textSize);
+//		}
+//		attributes.recycle();
+//		android.view.ViewGroup.LayoutParams params = topButton.getLayoutParams();
+//		params.width = width;
+//		params.height = height;
+//		topButton.setLayoutParams(params);
+//		
+	}
+	
+	private void initView(final Context c){
+		arrow = new ArrowView(c, null, topButton);
 		topButton.setCompoundDrawables(null, null, arrow.getDrawable(), null);
 
 		// click button text on to popupWindow
@@ -87,13 +102,12 @@ public class CustomSinnper extends LinearLayout {
 
 			@Override
 			public void onClick(View arg0) {
-				initPopupWindow(mContext);
+				initPopupWindow(c);
 			}
 		});
 		
-		mListView = new CornerListView(mContext);
-		mListView.setScrollBarFadeDuration(0);
-		mListView.setScrollbarFadingEnabled(true);
+		mListView = new CornerListView(c);
+		mListView.setScrollbarFadingEnabled(false);
 		mListView.setBackgroundResource(R.drawable.shape_bg_listview);
 		mListView.setCacheColorHint(0);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -107,9 +121,6 @@ public class CustomSinnper extends LinearLayout {
 				changListener.onItemSeleted(parent, view, position, id);
 			}
 		});
-
-		addView(topButton);
-
 	}
 
 	@SuppressLint("NewApi")
