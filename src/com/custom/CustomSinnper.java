@@ -1,10 +1,8 @@
 package com.custom;
 
-import java.awt.font.TextAttribute;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
@@ -13,16 +11,12 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -43,20 +37,6 @@ public class CustomSinnper extends Button {
 
 	private Context mContext;
 	
-	private int width = 200;
-	
-	private int height = 100;
-	
-	public void setWidth(int width){
-		this.width = width;
-	}
-	public void setheight(int height){
-		this.height = height;
-	}
-	
-	
-
-
 	/**
 	 * Button topButton to addView
 	 * 
@@ -123,6 +103,7 @@ public class CustomSinnper extends Button {
 		});
 	}
 
+	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
 	protected void initPopupWindow(Context context) {
 		if (popup == null) {
@@ -135,8 +116,6 @@ public class CustomSinnper extends Button {
 			popup.setContentView(mListView);
 		}
 		if (!popup.isShowing()) {
-			
-			
 			popup.showAsDropDown(topButton);
 		}
 	}
