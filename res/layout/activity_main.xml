@@ -12,10 +12,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
-	<com.custom.view.CustomSinnper 
+	<com.custom.CustomSinnper 
 	    android:id="@+id/custom_sinnper"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content">	    
-	</com.custom.view.CustomSinnper>
+	</com.custom.CustomSinnper>
     
 </RelativeLayout>
