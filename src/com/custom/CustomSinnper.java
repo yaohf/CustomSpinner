@@ -113,10 +113,8 @@ public class CustomSinnper extends Button {
 		
 		mListView = new CornerListView(c);
 		mListView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		mListView.setScrollbarFadingEnabled(false);
 		mListView.setBackgroundResource(R.drawable.shape_bg_listview);
 		mListView.setCacheColorHint(0x00000000);
-		mListView.setFadingEdgeLength(0);
 		mListView.setPadding(5, 5, 5, 5);
 		mListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
