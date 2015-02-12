@@ -1,18 +1,25 @@
 package com.custom;
 
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -36,7 +43,10 @@ public class CustomSinnper extends Button {
 	private OnItemSeletedListener changListener;
 
 	private Context mContext;
-	
+
+	private Animation showAnimation;
+	private Animation dissAnimation;
+
 	/**
 	 * Button topButton to addView
 	 * 
@@ -49,31 +59,37 @@ public class CustomSinnper extends Button {
 		this.mContext = context;
 		topButton = this;
 		initView(mContext);
-		
-//		TypedArray attributes = mContext.obtainStyledAttributes(attrs, R.styleable.spinner);
-//		final CharSequence text = attributes.getString(R.styleable.spinner_text);
-//		Log.i("text", text.toString());
-//		if(text != null){
-//			topButton.setText(text);
-//		}
-//
-//		
-//		final int color = attributes.getColor(R.styleable.spinner_textColor, Color.BLACK);
-//		topButton.setTextColor(color);
-//		
-//		final int textSize = attributes.getDimensionPixelSize(R.styleable.spinner_textSize, 0);
-//		if(textSize > 0){
-//			topButton.setTextScaleX(textSize);
-//		}
-//		attributes.recycle();
-//		android.view.ViewGroup.LayoutParams params = topButton.getLayoutParams();
-//		params.width = width;
-//		params.height = height;
-//		topButton.setLayoutParams(params);
-//		
+
+		// TypedArray attributes = mContext.obtainStyledAttributes(attrs,
+		// R.styleable.spinner);
+		// final CharSequence text =
+		// attributes.getString(R.styleable.spinner_text);
+		// Log.i("text", text.toString());
+		// if(text != null){
+		// topButton.setText(text);
+		// }
+		//
+		//
+		// final int color = attributes.getColor(R.styleable.spinner_textColor,
+		// Color.BLACK);
+		// topButton.setTextColor(color);
+		//
+		// final int textSize =
+		// attributes.getDimensionPixelSize(R.styleable.spinner_textSize, 0);
+		// if(textSize > 0){
+		// topButton.setTextScaleX(textSize);
+		// }
+		// attributes.recycle();
+		// android.view.ViewGroup.LayoutParams params =
+		// topButton.getLayoutParams();
+		// params.width = width;
+		// params.height = height;
+		// topButton.setLayoutParams(params);
+		//
 	}
-	
-	private void initView(final Context c){
+
+	@SuppressLint("NewApi")
+	private void initView(final Context c) {
 		arrow = new ArrowView(c, null, topButton);
 		topButton.setCompoundDrawables(null, null, arrow.getDrawable(), null);
 
@@ -86,10 +102,15 @@ public class CustomSinnper extends Button {
 			}
 		});
 		
+		
 		mListView = new CornerListView(c);
+		mListView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		mListView.setScrollbarFadingEnabled(false);
 		mListView.setBackgroundResource(R.drawable.shape_bg_listview);
-		mListView.setCacheColorHint(0);
+		mListView.setCacheColorHint(0x000000);
+		mListView.setFadingEdgeLength(0);
+		mListView.setPadding(5, 5, 5, 5);
+		mListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -103,37 +124,83 @@ public class CustomSinnper extends Button {
 		});
 	}
 
-	@SuppressWarnings("deprecation")
-	@SuppressLint("NewApi")
 	protected void initPopupWindow(Context context) {
 		if (popup == null) {
 			popup = new PopupWindow(mContext);
 			popup.setWidth(topButton.getWidth());
 			popup.setBackgroundDrawable(new BitmapDrawable());
 			popup.setFocusable(true);
-			popup.setHeight(500);
+			popup.setHeight(WindowManager.LayoutParams.FILL_PARENT);
 			popup.setOutsideTouchable(true);
 			popup.setContentView(mListView);
 		}
+		showPop();
+
+	}
+
+	protected void showPop() {
 		if (!popup.isShowing()) {
+			if (showAnimation == null) {
+				showAnimation = new TranslateAnimation(
+						Animation.RELATIVE_TO_SELF, 0.0f,
+						Animation.RELATIVE_TO_SELF, 0.0f,
+						Animation.RELATIVE_TO_SELF, -1.0f,
+						Animation.RELATIVE_TO_SELF, 0.0f);
+				showAnimation.setInterpolator(new AccelerateInterpolator());
+				showAnimation.setDuration(100);
+
+			}
+			popup.getContentView().startAnimation(showAnimation);
+
 			popup.showAsDropDown(topButton);
 		}
 	}
 
 	protected void dismiss() {
+
 		if (popup.isShowing()) {
-			popup.dismiss();
+			if (dissAnimation == null) {
+				dissAnimation = new TranslateAnimation(
+						Animation.RELATIVE_TO_SELF, 0.0f,
+						Animation.RELATIVE_TO_SELF, 0.0f,
+						Animation.RELATIVE_TO_SELF, 0.0f,
+						Animation.RELATIVE_TO_SELF, -1.0f);
+				dissAnimation.setDuration(150);
+				dissAnimation.setAnimationListener(new AnimationListener() {
+
+					@Override
+					public void onAnimationStart(Animation animation) {
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+					}
+
+					@Override
+					public void onAnimationEnd(Animation animation) {
+
+						new Handler().post(new Runnable() {
+							@Override
+							public void run() {
+								popup.dismiss();
+							}
+						});
+
+					}
+				});
+			}
+			popup.getContentView().startAnimation(dissAnimation);
 		}
 	}
 
 	private void setTopText(ListAdapter adapter) {
 		ListAdapter mAdapter = adapter;
 		String text = "";
-		if(mAdapter.getCount() <= 0){
+		if (mAdapter.getCount() <= 0) {
 			text = "select";
 			topButton.setText(text);
 			return;
-		}else if (topButton.getText().toString().equals("")) {
+		} else if (topButton.getText().toString().equals("")) {
 			text = (String) mAdapter.getItem(0);
 			topButton.setText(text);
 		}
@@ -184,6 +251,7 @@ public class CustomSinnper extends Button {
 
 		@Override
 		public boolean onInterceptTouchEvent(MotionEvent ev) {
+			
 			final int action = ev.getAction();
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
@@ -195,18 +263,13 @@ public class CustomSinnper extends Button {
 					break;
 				} else {
 					if (itemNum == 0) {
-						if (itemNum == (getAdapter().getCount() - 1)) {
-							setSelector(R.drawable.app_list_corner_round);
-						} else {
 							setSelector(R.drawable.app_list_corner_round_top);
-						}
 					} else if (itemNum == (getAdapter().getCount() - 1)) {
 						setSelector(R.drawable.app_list_corner_round_bottom);
 					} else {
 						setSelector(R.drawable.app_list_corner_shape);
 					}
 				}
-
 				break;
 			}
 			return super.onInterceptTouchEvent(ev);
@@ -220,6 +283,8 @@ public class CustomSinnper extends Button {
 		private int width;
 		private int height;
 		protected ShapeDrawable shape;
+		protected boolean isAngle;
+		private Matrix matrix;
 
 		public ArrowView(Context context, AttributeSet set, View v) {
 			super(context, set);
@@ -234,13 +299,14 @@ public class CustomSinnper extends Button {
 			shape = new ShapeDrawable(new PathShape(p, width, height));
 			shape.getPaint().setColor(Color.BLACK);
 			shape.setBounds(0, 0, width, height);
+			matrix = new Matrix();
 
 		}
 
 		public void setColor(int color) {
 			shape.getPaint().setColor(color);
 		}
-		
+
 		protected Drawable getDrawable() {
 
 			Canvas canvas = new Canvas();
