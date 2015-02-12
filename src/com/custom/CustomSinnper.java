@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
@@ -46,6 +47,13 @@ public class CustomSinnper extends Button {
 
 	private Animation showAnimation;
 	private Animation dissAnimation;
+	
+	
+	public boolean isShowPopup()
+	{
+		return popup.isShowing();
+	}
+	
 
 	/**
 	 * Button topButton to addView
@@ -107,7 +115,7 @@ public class CustomSinnper extends Button {
 		mListView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		mListView.setScrollbarFadingEnabled(false);
 		mListView.setBackgroundResource(R.drawable.shape_bg_listview);
-		mListView.setCacheColorHint(0x000000);
+		mListView.setCacheColorHint(0x00000000);
 		mListView.setFadingEdgeLength(0);
 		mListView.setPadding(5, 5, 5, 5);
 		mListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -128,11 +136,13 @@ public class CustomSinnper extends Button {
 		if (popup == null) {
 			popup = new PopupWindow(mContext);
 			popup.setWidth(topButton.getWidth());
-			popup.setBackgroundDrawable(new BitmapDrawable());
-			popup.setFocusable(true);
+			popup.setBackgroundDrawable(new ColorDrawable(0x00000000));
+			popup.setFocusable(false);
 			popup.setHeight(WindowManager.LayoutParams.FILL_PARENT);
-			popup.setOutsideTouchable(true);
+			popup.setOutsideTouchable(false);
 			popup.setContentView(mListView);
+			//解决 popup 弹出输入法被遮挡问题
+			popup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
 		}
 		showPop();
 

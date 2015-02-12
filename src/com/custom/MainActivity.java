@@ -5,6 +5,7 @@ package com.custom;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -46,6 +47,18 @@ public class MainActivity extends Activity {
 		});
 		//
 
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+		{
+			if(spinner.isShowPopup())
+			{
+				spinner.dismiss();
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }
